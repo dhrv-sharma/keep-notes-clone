@@ -2,6 +2,8 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:noteapp/colors.dart';
+import 'package:noteapp/createnote.dart';
+import 'package:noteapp/noteview.dart';
 import 'package:noteapp/sidedrawer.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart'; // staggered view
 
@@ -17,6 +19,16 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton( // inbuilt class for the floating button 
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>newNote()));
+        },
+        backgroundColor: cardColor,
+        child: Icon(
+          Icons.add,
+          size: 45,
+        ),
+      ),
       endDrawerEnableOpenDragGesture:
           true, // enabling side drawer gesture for drawer in the  particular activity
 
@@ -142,10 +154,30 @@ class Home extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 nonhiglight_nte(),
-                highlighted_nte()
-                
+                highlighted_nte(),
+                Container(
+                  // here to make centre the thing List View on centre we did a container so that it can take whole space width
+                  width: MediaQuery.of(context).size.width,
+                  // trick to check size of container
+                  // decoration: BoxDecoration(
+                  //   border: Border.all(color: white)
+                  // ),
+                  margin: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "List View",
+                        style: TextStyle(
+                            color: white.withOpacity(0.5),
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+                listviewNotes()
               ],
             ),
           ),
@@ -155,65 +187,58 @@ class Home extends StatelessWidget {
   }
 }
 
-
-Widget nonhiglight_nte(){
-   return Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 15,
-                    ),
-                    child: StaggeredGridView.countBuilder(
-                        // here main axis is vertical and the cross axis is horizontal like column
-                        physics:
-                            NeverScrollableScrollPhysics(), // its internal scrolling get closed
-                        shrinkWrap: true, // it is always neccessary
-                        itemCount: 10, // gives the number of count
-                        mainAxisSpacing:
-                            12, // gives space between item in main axis
-                        crossAxisSpacing:
-                            12, // gives space between item in  cross axis
-                        crossAxisCount: 4, // means 4 columns would be there
-                        staggeredTileBuilder: (index) => const StaggeredTile
-                                .fit(
-                            2), // this number of column a tile will get scatterred // vertivally it will takes space as per its sixe
-                        itemBuilder: (context, index) => InkWell(
-                              // same as of listview builder
-                              // widget ui of one particular tile
-                              onTap: () {
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => NoteView()));
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: white.withOpacity(0.4)),
-                                    borderRadius: BorderRadius.circular(7)),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text("HEADING",
-                                        style: TextStyle(
-                                            color: white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold)),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      index.isEven
-                                          ? note1.length > 250
-                                              ? "${note1.substring(0, 250)}......."
-                                              : note1
-                                          : note2,
-                                      style: const TextStyle(color: white),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )));
+Widget nonhiglight_nte() {
+  return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 15,
+      ),
+      child: StaggeredGridView.countBuilder(
+          // here main axis is vertical and the cross axis is horizontal like column
+          physics:
+              NeverScrollableScrollPhysics(), // its internal scrolling get closed
+          shrinkWrap: true, // it is always neccessary
+          itemCount: 10, // gives the number of count
+          mainAxisSpacing: 12, // gives space between item in main axis
+          crossAxisSpacing: 12, // gives space between item in  cross axis
+          crossAxisCount: 4, // means 4 columns would be there
+          staggeredTileBuilder: (index) => const StaggeredTile.fit(
+              2), // this number of column a tile will get scatterred // vertivally it will takes space as per its sixe
+          itemBuilder: (context, index) => InkWell(
+                // same as of listview builder
+                // widget ui of one particular tile
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => noteview()));
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: white.withOpacity(0.4)),
+                      borderRadius: BorderRadius.circular(7)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("HEADING",
+                          style: TextStyle(
+                              color: white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold)),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        index.isEven
+                            ? note1.length > 250
+                                ? "${note1.substring(0, 250)}......."
+                                : note1
+                            : note2,
+                        style: const TextStyle(color: white),
+                      )
+                    ],
+                  ),
+                ),
+              )));
 }
 
 Widget highlighted_nte() {
@@ -237,10 +262,8 @@ Widget highlighted_nte() {
                 // same as of listview builder
                 // widget ui of one particular tile
                 onTap: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => NoteView()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => noteview()));
                 },
                 child: Container(
                   padding: EdgeInsets.all(10),
@@ -274,4 +297,52 @@ Widget highlighted_nte() {
                   ),
                 ),
               )));
+}
+
+Widget listviewNotes() {
+  return ListView.builder(
+      physics:
+          NeverScrollableScrollPhysics(), // its internal scrolling get closed
+      shrinkWrap: true, // it is always neccessary
+      itemCount: 10, // gives the number of count
+
+      itemBuilder: (context, index) => InkWell(
+            // same as of listview builder
+            // widget ui of one particular tile
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => noteview()));
+            },
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: index.isEven ? Colors.green[900] : Colors.blue[900],
+                  border: index.isEven
+                      ? Border.all(color: Colors.green.shade900)
+                      : Border.all(color: Colors.blue.shade900),
+                  borderRadius: BorderRadius.circular(7)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("HEADING",
+                      style: TextStyle(
+                          color: white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    index.isEven
+                        ? note1.length > 250
+                            ? "${note1.substring(0, 250)}......."
+                            : note1
+                        : note2,
+                    style: const TextStyle(color: white),
+                  )
+                ],
+              ),
+            ),
+          ));
 }
