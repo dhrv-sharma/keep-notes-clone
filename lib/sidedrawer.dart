@@ -1,8 +1,15 @@
 // here we are creating the side drawer ui design
 
+
+import 'dart:ffi';
+
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:noteapp/archiveview.dart';
 import 'package:noteapp/colors.dart';
+import 'package:noteapp/settingview.dart';
 
 class side_Drawer extends StatefulWidget {
   const side_Drawer({super.key});
@@ -13,6 +20,8 @@ class side_Drawer extends StatefulWidget {
 
 class _side_DrawerState extends State<side_Drawer> {
   @override
+
+ 
   Widget build(BuildContext context) {
     return
         // safe area brings the widget below the notification bar
@@ -59,8 +68,6 @@ class _side_DrawerState extends State<side_Drawer> {
     );
     ;
   }
-}
-
 Widget sectionOne() {
   return Container(
     margin: const EdgeInsets.only(right: 10),
@@ -105,7 +112,9 @@ Widget sectiontwo() {
   return Container(
     margin: const EdgeInsets.only(right: 10),
     child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>archiveView()));
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
           child: Row(
@@ -132,7 +141,11 @@ Widget sectionsetting() {
   return Container(
     margin: const EdgeInsets.only(right: 10),
     child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+         
+         Navigator.push(context, MaterialPageRoute(builder: (context)=>settingView()));
+          
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
           child: Row(
@@ -154,4 +167,6 @@ Widget sectionsetting() {
         )),
   );
 }
+}
+
 

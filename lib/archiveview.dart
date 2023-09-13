@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:noteapp/colors.dart';
 import 'package:noteapp/createnote.dart';
 import 'package:noteapp/noteview.dart';
-import 'package:noteapp/searchpage.dart';
-import 'package:noteapp/services/services.dart';
 import 'package:noteapp/sidedrawer.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart'; // staggered view
 
@@ -14,36 +12,10 @@ String note1 =
 String note2 =
     "This is smaller note yes this  This is bigger note This is bigger note This is bigger note This is bigger note";
 
-class Home extends StatefulWidget {
-  const Home({super.key});
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
- GlobalKey<ScaffoldState> _drawerKey =
+class archiveView extends StatelessWidget {
+  GlobalKey<ScaffoldState> _drawerKey =
       GlobalKey(); // global key for the app drawer opening you required drawer key
 
-  Future cretaeEntry() async{
-    await Notedata.instance.InsertEntry();
-  }
-
-  Future<String?> getNotes() async{
-    await Notedata.instance.readNotes();
-
-    
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    cretaeEntry();
-    getNotes();
-  }
-
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,102 +43,97 @@ class _HomeState extends State<Home> {
             // making app scrollable
             child: Column(
               children: [
-                GestureDetector(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>searchView()));
-                  },
-                  child: Container(
-                      // search bar code
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 10),
-                      width: MediaQuery.of(context)
-                          .size
-                          .width, // to get the width of the device
-                      height: 55,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: cardColor,
-                          boxShadow: [
-                            BoxShadow(
-                                color: black.withOpacity(0.2),
-                                spreadRadius: 1,
-                                blurRadius: 3)
-                          ]),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment
-                            .spaceBetween, // it is used when you have to put one object at start and other at the end
-                        children: [
-                          Row(
+                Container(
+                    // search bar code
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    width: MediaQuery.of(context)
+                        .size
+                        .width, // to get the width of the device
+                    height: 55,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: cardColor,
+                        boxShadow: [
+                          BoxShadow(
+                              color: black.withOpacity(0.2),
+                              spreadRadius: 1,
+                              blurRadius: 3)
+                        ]),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment
+                          .spaceBetween, // it is used when you have to put one object at start and other at the end
+                      children: [
+                        Row(
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  _drawerKey.currentState!
+                                      .openDrawer(); // function to open drawer from the button
+                                },
+                                icon: const Icon(
+                                  Icons.menu,
+                                  color: white,
+                                )),
+                            Container(
+                              height: 55,
+                              width: 205,
+                              decoration: const BoxDecoration(
+                                  // border: Border.all(color: Colors.white)
+                                  ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Search Your Notes ",
+                                    style: TextStyle(
+                                        color: white.withOpacity(
+                                            0.5), // used to set the transparency of the color
+                                        fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        // const SizedBox(width: 30,),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              IconButton(
-                                  onPressed: () {
-                                    _drawerKey.currentState!
-                                        .openDrawer(); // function to open drawer from the button
-                                  },
-                                  icon: const Icon(
-                                    Icons.menu,
+                              TextButton(
+                                  style: ButtonStyle(
+                                      //ButtonStyle is used to set the property of the button
+                                      // here we have given the button style when user taps on it
+                                      overlayColor: // sets the tap color
+                                          MaterialStateColor.resolveWith(
+                                              (states) =>
+                                                  white.withOpacity(0.1)),
+                                      shape: MaterialStateProperty
+                                          .all< // sets the tap shape
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50.0),
+                                      ))),
+                                  onPressed: () {},
+                                  child: const Icon(
+                                    Icons.grid_view,
                                     color: white,
                                   )),
-                              Container(
-                                height: 55,
-                                width: 205,
-                                decoration: const BoxDecoration(
-                                    // border: Border.all(color: Colors.white)
-                                    ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Search Your Notes ",
-                                      style: TextStyle(
-                                          color: white.withOpacity(
-                                              0.5), // used to set the transparency of the color
-                                          fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              const SizedBox(width: 10),
+                              const CircleAvatar(
+                                backgroundColor: white,
+                                radius:
+                                    16, // size define of circular avatar image
+                              )
                             ],
                           ),
-                          // const SizedBox(width: 30,),
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton(
-                                    style: ButtonStyle(
-                                        //ButtonStyle is used to set the property of the button
-                                        // here we have given the button style when user taps on it
-                                        overlayColor: // sets the tap color
-                                            MaterialStateColor.resolveWith(
-                                                (states) =>
-                                                    white.withOpacity(0.1)),
-                                        shape: MaterialStateProperty
-                                            .all< // sets the tap shape
-                                                    RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(50.0),
-                                        ))),
-                                    onPressed: () {},
-                                    child: const Icon(
-                                      Icons.grid_view,
-                                      color: white,
-                                    )),
-                                const SizedBox(width: 10),
-                                const CircleAvatar(
-                                  backgroundColor: white,
-                                  radius:
-                                      16, // size define of circular avatar image
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      )),
-                ),
+                        )
+                      ],
+                    )),
                 Container(
                   width: MediaQuery.of(context).size.width,
                   // trick to check size of container
@@ -379,4 +346,3 @@ Widget listviewNotes() {
             ),
           ));
 }
-
