@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:noteapp/colors.dart';
 import 'package:noteapp/editnote.dart';
 import 'package:noteapp/home.dart';
+import 'package:noteapp/model/mynote.dart';
 
 class noteview extends StatefulWidget {
-  const noteview({super.key});
+  late note Note;
 
+  
+  
+  // noteview({required this.Note});
   @override
   State<noteview> createState() => _noteviewState();
 }
@@ -47,8 +51,8 @@ class _noteviewState extends State<noteview> {
           children: [
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-              child: const Text("HEADING",
-                  style: TextStyle(
+              child:  Text(widget.Note.title,
+                  style:const  TextStyle(
                       color: white, fontSize: 23, fontWeight: FontWeight.bold)),
             ),
             const SizedBox(
@@ -57,7 +61,7 @@ class _noteviewState extends State<noteview> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
               child: Text(
-                note1,
+                widget.Note.content,
                 style: const TextStyle(color: white),
               ),
             )

@@ -1,5 +1,5 @@
 // reason to do
-
+// database required json data 
 // db file is database file
 // we will create packet can be called as object
 // this will act as intermediate between the database and mobile applications
@@ -40,17 +40,19 @@ class note {
 // function to convert json to object
 // return instance of an object of class note
 //input is Map jsonREC
+// return note object 
   static note fromJson(Map<String, Object?> jsonREC) {
     return note(
-        id: jsonREC[NotesImpnames.id] as int?,
-        pin: jsonREC[NotesImpnames.pin == 1] as bool,
+        id: jsonREC[NotesImpnames.id] as int?, // as is used for type casting 
+        pin: jsonREC[NotesImpnames.pin] == true as bool,
         title: jsonREC[NotesImpnames.title] as String,
         content: jsonREC[NotesImpnames.content] as String,
         createdTime:
             DateTime.parse(jsonREC[NotesImpnames.createdTime] as String));
   }
 
-// return map
+// return map from the object data variables 
+// used for database 
   Map<String, Object?> toJson() {
     return {
       NotesImpnames.id: id,
@@ -69,6 +71,8 @@ class note {
 
 // If id is not null, the expression evaluates to the value of id.
 // If id is null, the expression evaluates to this.id.
+
+// function return an note object 
   note copy(
       {int? id,
       bool? pin,

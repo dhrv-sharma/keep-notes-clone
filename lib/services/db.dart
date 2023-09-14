@@ -30,9 +30,9 @@ class noteDatabase {
 
 // This method is called during database initialization to create the Notes table with specific columns: id, pin, title, content, and createdTime.
   Future _createDB(Database db, int version) async {
-    final idType ='INTEGER PRIMARY KEY AUTOINCREMENT';
-    final boolType='BOOLEAN NOT NULL';
-    final textType='TEXT NOT NULL';
+    final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    final boolType = 'BOOLEAN NOT NULL';
+    final textType = 'TEXT NOT NULL';
     await db.execute('''
     CREATE TABLE Notes(
       ${NotesImpnames.id} $idType,
@@ -45,47 +45,57 @@ class noteDatabase {
     ''');
   }
 
-
+// entering the data in the database as here we get note object as in argument
   Future<note?> InsertEntry(note noteEX) async {
     final db = await instance.database;
-    final id=await db!.insert(NotesImpnames.tableaName,noteEX.toJson());
-    return noteEX.copy(id: id);
+    final id = await db!.insert(NotesImpnames.tableaName,
+        noteEX.toJson()); // objet data converted in to json file
+  
+    return noteEX.copy(id: id); // return copy of object
   }
-
 
   Future<note?> readOneNote(int id) async {
     // id is used as PRIMARY key
     final db = await instance.database;
+    // while query we get the data in the form map
     final map = await db!.query(NotesImpnames.tableaName,
-        columns: NotesImpnames.value, // columns only that particular columns get printed
+        columns: NotesImpnames
+            .value, // columns only that particular columns get printed
         where: '${NotesImpnames.id} = ?', // condition set
         whereArgs: [id]); // condition value set ? = id
 
-    if(map.isNotEmpty){
+    if (map.isNotEmpty) {
+      // map.first return the first entry of the map
       return note.fromJson(map.first);
-    }else{
+    } else {
       return null;
     }
   }
 
-  // Future<note> readNotes() async {
-  //   final db = await instance.database;
-  //   final orderList =
-  //       '${NotesImpnames.createdTime} ASC'; // sorting the data from the table in ascending order of time
-  //   final query_result = await db!
-  //       .query(NotesImpnames.tableaName, orderBy: orderList); //Notes is the name of the database
-  //   print(query_result);
-  //    return query_result.map((json) => note.fromJson(json)).toList();
-  // }
-
-  Future<int> updateNote(int id) async {
+  Future<List<note>> readNotes() async {
     final db = await instance.database;
-    return await db!.update("Notes", {"title": "this is updated title "},
-        where: 'id = ?', whereArgs: [id]);
+    final orderList =
+        '${NotesImpnames.createdTime} ASC'; // sorting the data from the table in ascending order of time
+    final query_result = await db!.query(NotesImpnames.tableaName,
+        orderBy: orderList); //Notes is the name of the database
+        
+    return query_result.map((json) => note.fromJson(json)).toList();
   }
 
-  Future<int> deleteNote(int id) async {
-    final db=await instance.database;
-    return await db!.delete("Notes",where: 'id = ? ',whereArgs: [id]);
+  Future<int> updateNote(note noteEx) async {
+    final db = await instance.database;
+    return await db!.update(NotesImpnames.tableaName, noteEx.toJson(),
+        where: '${NotesImpnames.id} = ?', whereArgs: [noteEx.id]);
+  }
+
+  Future<int> deleteNote(note noteEx) async {
+    final db = await instance.database;
+    return await db!.delete(NotesImpnames.tableaName,
+        where: '${NotesImpnames.id} = ? ', whereArgs: [noteEx.id]);
+  }
+
+  Future closeDb() async {
+    final db = await instance.database;
+    db!.close();
   }
 }
