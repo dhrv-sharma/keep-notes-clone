@@ -208,8 +208,8 @@ Widget nonhiglight_nte() {
                 // same as of listview builder
                 // widget ui of one particular tile
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => noteview()));
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => noteview()));
                 },
                 child: Container(
                   padding: const EdgeInsets.all(10),
@@ -262,8 +262,8 @@ Widget highlighted_nte() {
                 // same as of listview builder
                 // widget ui of one particular tile
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => noteview()));
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => noteview()));
                 },
                 child: Container(
                   padding: EdgeInsets.all(10),
@@ -310,8 +310,8 @@ Widget listviewNotes() {
             // same as of listview builder
             // widget ui of one particular tile
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => noteview()));
+              // Navigator.push(
+              //     context, MaterialPageRoute(builder: (context) => noteview()));
             },
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),

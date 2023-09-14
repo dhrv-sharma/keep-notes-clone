@@ -7,6 +7,8 @@ import 'package:noteapp/model/mynote.dart';
 class noteview extends StatefulWidget {
   late note Note;
 
+  noteview({required this.Note});
+
   
   
   // noteview({required this.Note});
