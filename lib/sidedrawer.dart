@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:noteapp/archiveview.dart';
 import 'package:noteapp/colors.dart';
+import 'package:noteapp/home.dart';
 import 'package:noteapp/settingview.dart';
 
 class side_Drawer extends StatefulWidget {
@@ -75,7 +76,10 @@ Widget sectionOne() {
     // It uses MaterialStateProperty.all to specify that the background color should be the same for all button states.
     // MaterialStateProperty.all is a utility function in Flutter that's commonly used to set a single value for a property for all possible states of a widget. It's often used for defining properties of interactive widgets like buttons, where the appearance or behavior may change based on different states, such as when the button is pressed, hovered over, or in its default state.
     child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Home()));
+
+        },
         style: ButtonStyle(
             // used for styling the text button
             backgroundColor: MaterialStateProperty.all(//
@@ -113,7 +117,7 @@ Widget sectiontwo() {
     margin: const EdgeInsets.only(right: 10),
     child: TextButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>archiveView()));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>archiveFolder()));
         },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),

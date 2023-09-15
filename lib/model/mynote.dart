@@ -11,9 +11,11 @@ class NotesImpnames {
   static final String content = "content";
   static final String createdTime = "createdTime";
   static final String tableaName = "Notes";
+  static final String isArchived = "isArchived";
   static final List<String> value = [
     id,
     pin,
+    isArchived,
     title,
     content,
     createdTime,
@@ -29,10 +31,12 @@ class note {
   final String title;
   final String content;
   final DateTime createdTime;
+  final bool isArchived;
 
   const note(
       {this.id,
       required this.pin,
+      required this.isArchived,
       required this.title,
       required this.content,
       required this.createdTime});
@@ -44,7 +48,8 @@ class note {
   static note fromJson(Map<String, Object?> jsonREC) {
     return note(
         id: jsonREC[NotesImpnames.id] as int?, // as is used for type casting 
-        pin: jsonREC[NotesImpnames.pin] == true as bool,
+        pin: jsonREC[NotesImpnames.pin] == 1,
+        isArchived: jsonREC[NotesImpnames.isArchived] == 1,
         title: jsonREC[NotesImpnames.title] as String,
         content: jsonREC[NotesImpnames.content] as String,
         createdTime:
@@ -57,6 +62,7 @@ class note {
     return {
       NotesImpnames.id: id,
       NotesImpnames.pin: pin ? 1 : 0,
+      NotesImpnames.isArchived : isArchived ? 1 : 0,
       NotesImpnames.title: title,
       NotesImpnames.content: content,
       NotesImpnames.createdTime:
@@ -76,6 +82,7 @@ class note {
   note copy(
       {int? id,
       bool? pin,
+      bool ? isArchived,
       String? title,
       String? content,
       DateTime? createdTime}) {
@@ -84,6 +91,7 @@ class note {
     return note(
         id: id ?? this.id,
         pin: pin ?? this.pin,
+        isArchived: isArchived ?? this.isArchived,
         title: title ?? this.title,
         content: content ?? this.content,
         createdTime: createdTime ?? this.createdTime);

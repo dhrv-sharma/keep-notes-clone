@@ -3,20 +3,29 @@ import 'package:noteapp/colors.dart';
 import 'package:noteapp/editnote.dart';
 import 'package:noteapp/home.dart';
 import 'package:noteapp/model/mynote.dart';
+import 'package:noteapp/services/db.dart';
 
 class noteview extends StatefulWidget {
-  late note Note;
+  late note? Note;
+
+  // constructor will take a particular note
 
   noteview({required this.Note});
 
-  
-  
   // noteview({required this.Note});
   @override
   State<noteview> createState() => _noteviewState();
 }
 
 class _noteviewState extends State<noteview> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.Note!.pin);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,24 +33,39 @@ class _noteviewState extends State<noteview> {
       appBar: AppBar(
         backgroundColor: bgColor,
         elevation: 0.3,
-        actions: [ // these put the icons over the activity action bar 
+        actions: [
+          // these put the icons over the activity action bar
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+              await noteDatabase.instance.pinNote(widget.Note);
+              Navigator.pop(context);
             },
-            icon: const Icon(Icons.push_pin_outlined),
-            splashRadius: 17, // when user tap over the button then this tap shape radius is set by this property
+            icon: widget.Note!.pin ? const Icon(Icons.push_pin): Icon(Icons.push_pin_outlined)  ,
+            splashRadius:
+                17, // when user tap over the button then this tap shape radius is set by this property
           ),
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.archive_outlined),
-            splashRadius: 17, 
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>editNote()));
+            onPressed: () async{
+              await noteDatabase.instance.archiveNote(widget.Note);
+              Navigator.pop(context);
 
             },
+            icon: widget.Note!.isArchived ?const  Icon(Icons.archive) :const  Icon(Icons.archive_outlined),
+            splashRadius: 17,
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => editNote(Note: widget.Note),));
+            },
             icon: const Icon(Icons.edit_outlined),
+            splashRadius: 17,
+          ),
+          IconButton(
+            onPressed: () async {
+              await noteDatabase.instance.deleteNote(widget.Note);
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.delete_forever_outlined),
             splashRadius: 17,
           )
         ],
@@ -53,8 +77,8 @@ class _noteviewState extends State<noteview> {
           children: [
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-              child:  Text(widget.Note.title,
-                  style:const  TextStyle(
+              child: Text(widget.Note!.title,
+                  style: const TextStyle(
                       color: white, fontSize: 23, fontWeight: FontWeight.bold)),
             ),
             const SizedBox(
@@ -63,7 +87,7 @@ class _noteviewState extends State<noteview> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
               child: Text(
-                widget.Note.content,
+                widget.Note!.content,
                 style: const TextStyle(color: white),
               ),
             )

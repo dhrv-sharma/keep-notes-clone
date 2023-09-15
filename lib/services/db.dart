@@ -1,5 +1,6 @@
 // for sqlite services
 
+import 'package:flutter/material.dart';
 import 'package:noteapp/model/mynote.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -37,6 +38,7 @@ class noteDatabase {
     CREATE TABLE Notes(
       ${NotesImpnames.id} $idType,
       ${NotesImpnames.pin} $boolType,
+      ${NotesImpnames.isArchived} $boolType,
       ${NotesImpnames.title} $textType,
       ${NotesImpnames.content} $textType,
       ${NotesImpnames.createdTime} $textType
@@ -50,7 +52,7 @@ class noteDatabase {
     final db = await instance.database;
     final id = await db!.insert(NotesImpnames.tableaName,
         noteEX.toJson()); // objet data converted in to json file
-  
+
     return noteEX.copy(id: id); // return copy of object
   }
 
@@ -59,10 +61,12 @@ class noteDatabase {
     final db = await instance.database;
     // while query we get the data in the form map
     final map = await db!.query(NotesImpnames.tableaName,
-        columns: NotesImpnames
-            .value, // columns only that particular columns get printed
+        // columns only that particular columns get printed
         where: '${NotesImpnames.id} = ?', // condition set
-        whereArgs: [id]); // condition value set ? = id
+        whereArgs: [id]);
+    // condition value set ? = id
+
+    print(map);
 
     if (map.isNotEmpty) {
       // map.first return the first entry of the map
@@ -76,9 +80,9 @@ class noteDatabase {
     final db = await instance.database;
     final orderList =
         '${NotesImpnames.createdTime} ASC'; // sorting the data from the table in ascending order of time
-    final query_result = await db!.query(NotesImpnames.tableaName,
+    final query_result = await db!.query(NotesImpnames.tableaName, where: '${NotesImpnames.pin} = 0 AND ${NotesImpnames.isArchived} = 0',
         orderBy: orderList); //Notes is the name of the database
-        
+
     return query_result.map((json) => note.fromJson(json)).toList();
   }
 
@@ -88,10 +92,81 @@ class noteDatabase {
         where: '${NotesImpnames.id} = ?', whereArgs: [noteEx.id]);
   }
 
-  Future<int> deleteNote(note noteEx) async {
+  Future<int> deleteNote(note? noteEx) async {
     final db = await instance.database;
     return await db!.delete(NotesImpnames.tableaName,
-        where: '${NotesImpnames.id} = ? ', whereArgs: [noteEx.id]);
+        where: '${NotesImpnames.id} = ? ', whereArgs: [noteEx!.id]);
+  }
+
+  Future<List<int>> getNoteString(String query) async {
+    String noteText = "";
+    final db = await instance.database;
+    final result = await db!.query(NotesImpnames.tableaName);
+    List<int> resultids = [];
+
+    result.forEach((element) {
+      if (element["title"].toString().toLowerCase().contains(query) ||
+          element["content"].toString().toLowerCase().contains(query)) {
+        resultids.add(element["id"] as int);
+      }
+    });
+
+    print(resultids);
+
+    return resultids;
+  }
+
+  Future pinNote(note? noteEx) async {
+    final db = await instance.database;
+    
+    
+    bool check=(noteEx!.pin);
+
+    await db!.update(
+        NotesImpnames.tableaName, {NotesImpnames.pin: check ? 0 : 1},
+        where: '${NotesImpnames.id} = ?', whereArgs: [noteEx.id]);
+
+  }
+
+  Future archiveNote(note? noteEx) async {
+    final db = await instance.database;
+    
+    
+    bool check=(noteEx!.isArchived);
+
+    await db!.update(
+        NotesImpnames.tableaName, {NotesImpnames.isArchived: check ? 0 : 1},
+        where: '${NotesImpnames.id} = ?', whereArgs: [noteEx.id]);
+
+  }
+  Future<List<note>> pinedNotes() async {
+    final db = await instance.database;
+    final orderList =
+        '${NotesImpnames.createdTime} ASC'; // sorting the data from the table in ascending order of time
+    final query_result = await db!.query(NotesImpnames.tableaName,
+        orderBy: orderList,where: '${NotesImpnames.pin} = 1 AND ${NotesImpnames.isArchived} = 0' ); //Notes is the name of the database
+
+    return query_result.map((json) => note.fromJson(json)).toList();
+  }
+
+  Future<List<note>> pinedArchivedNotes() async {
+    final db = await instance.database;
+    final orderList =
+        '${NotesImpnames.createdTime} ASC'; // sorting the data from the table in ascending order of time
+    final query_result = await db!.query(NotesImpnames.tableaName,
+        orderBy: orderList,where: '${NotesImpnames.pin} = 1 AND ${NotesImpnames.isArchived} = 1' ); //Notes is the name of the database
+
+    return query_result.map((json) => note.fromJson(json)).toList();
+  }
+
+   Future<List<note>> readArchivedNotes() async {
+    final db = await instance.database;
+    final orderList =
+        '${NotesImpnames.createdTime} ASC'; // sorting the data from the table in ascending order of time
+    final query_result = await db!.query(NotesImpnames.tableaName, where: '${NotesImpnames.pin} = 0 AND ${NotesImpnames.isArchived} = 1',
+        orderBy: orderList); //Notes is the name of the database
+
+    return query_result.map((json) => note.fromJson(json)).toList();
   }
 
   Future closeDb() async {

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:noteapp/colors.dart';
+import 'package:noteapp/home.dart';
+import 'package:noteapp/model/mynote.dart';
+import 'package:noteapp/services/db.dart';
 
 class newNote extends StatefulWidget {
   const newNote({super.key});
@@ -9,6 +12,16 @@ class newNote extends StatefulWidget {
 }
 
 class _newNoteState extends State<newNote> {
+  TextEditingController contrlTitle = new TextEditingController();
+  TextEditingController contrlContent = new TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    contrlContent.dispose();
+    contrlTitle.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +31,15 @@ class _newNoteState extends State<newNote> {
         elevation: 0.3,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              await noteDatabase.instance.InsertEntry(note(
+                  pin: false,
+                  isArchived: false,
+                  title: contrlTitle.text,
+                  content: contrlContent.text,
+                  createdTime: DateTime.now()));
+              Navigator.pop(context);
+            },
             icon: const Icon(Icons.save_outlined),
             splashRadius: 17,
           )
@@ -30,8 +51,12 @@ class _newNoteState extends State<newNote> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               child: TextField(
+                controller: contrlTitle,
                 cursorColor: white,
-                style: const TextStyle(fontSize: 25, color: Colors.white,fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    fontSize: 25,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
                 decoration: InputDecoration(
                     border: InputBorder.none,
                     focusedBorder: InputBorder.none,
@@ -45,9 +70,9 @@ class _newNoteState extends State<newNote> {
             ),
             Container(
               height: 300,
-
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
               child: TextField(
+                controller: contrlContent,
                 keyboardType: TextInputType.multiline,
                 minLines: 50,
                 maxLines: null,
