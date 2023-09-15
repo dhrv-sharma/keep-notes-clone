@@ -5,6 +5,9 @@ import 'package:noteapp/home.dart';
 import 'package:noteapp/model/mynote.dart';
 import 'package:noteapp/services/db.dart';
 
+late bool pinned;
+late bool archived;
+
 class noteview extends StatefulWidget {
   late note? Note;
 
@@ -18,12 +21,15 @@ class noteview extends StatefulWidget {
 }
 
 class _noteviewState extends State<noteview> {
+  late note? view;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(widget.Note!.pin);
+    view = widget.Note;
+    pinned = view!.pin;
+    archived = view!.isArchived;
   }
 
   @override
@@ -37,32 +43,53 @@ class _noteviewState extends State<noteview> {
           // these put the icons over the activity action bar
           IconButton(
             onPressed: () async {
-              await noteDatabase.instance.pinNote(widget.Note);
-              Navigator.pop(context);
+              note? temp = await noteDatabase.instance.pinNote(view);
+              // print("doing");
+              // Navigator.pop(context);
+              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> noteview(Note: widget.)));
+              view = temp;
+              pinned = !pinned;
+
+              setState(() {});
             },
-            icon: widget.Note!.pin ? const Icon(Icons.push_pin): Icon(Icons.push_pin_outlined)  ,
+            icon: pinned
+                ? const Icon(Icons.push_pin)
+                : const Icon(Icons.push_pin_outlined),
             splashRadius:
                 17, // when user tap over the button then this tap shape radius is set by this property
           ),
           IconButton(
-            onPressed: () async{
-              await noteDatabase.instance.archiveNote(widget.Note);
-              Navigator.pop(context);
+            onPressed: () async {
+              note? temp = await noteDatabase.instance.archiveNote(view);
+              // print("doing");
+              // Navigator.pop(context);
+              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> noteview(Note: widget.)));
+              view = temp;
+              archived = !archived;
 
+              print("second ${view!.isArchived}");
+
+              setState(() {});
             },
-            icon: widget.Note!.isArchived ?const  Icon(Icons.archive) :const  Icon(Icons.archive_outlined),
+            icon: archived
+                ? const Icon(Icons.archive)
+                : const Icon(Icons.archive_outlined),
             splashRadius: 17,
           ),
           IconButton(
             onPressed: () {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => editNote(Note: widget.Note),));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => editNote(Note: view),
+                  ));
             },
             icon: const Icon(Icons.edit_outlined),
             splashRadius: 17,
           ),
           IconButton(
             onPressed: () async {
-              await noteDatabase.instance.deleteNote(widget.Note);
+              await noteDatabase.instance.deleteNote(view);
               Navigator.pop(context);
             },
             icon: const Icon(Icons.delete_forever_outlined),
@@ -72,26 +99,30 @@ class _noteviewState extends State<noteview> {
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-              child: Text(widget.Note!.title,
-                  style: const TextStyle(
-                      color: white, fontSize: 23, fontWeight: FontWeight.bold)),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-              child: Text(
-                widget.Note!.content,
-                style: const TextStyle(color: white),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
+                child: Text(view!.title,
+                    style: const TextStyle(
+                        color: white,
+                        fontSize: 23,
+                        fontWeight: FontWeight.bold)),
               ),
-            )
-          ],
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
+                child: Text(
+                  view!.content,
+                  style: const TextStyle(color: white),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

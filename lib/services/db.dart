@@ -116,27 +116,35 @@ class noteDatabase {
     return resultids;
   }
 
-  Future pinNote(note? noteEx) async {
+  Future<note?> pinNote(note? noteEx) async {
     final db = await instance.database;
+
+    note temp =note(id: noteEx!.id,pin: !noteEx.pin, isArchived: noteEx.isArchived, title: noteEx.title, content: noteEx.content, createdTime: noteEx.createdTime);
     
     
-    bool check=(noteEx!.pin);
+    bool check=(noteEx.pin);
 
     await db!.update(
         NotesImpnames.tableaName, {NotesImpnames.pin: check ? 0 : 1},
         where: '${NotesImpnames.id} = ?', whereArgs: [noteEx.id]);
 
+     return temp;   
+
   }
 
-  Future archiveNote(note? noteEx) async {
+  Future<note?> archiveNote(note? noteEx) async {
     final db = await instance.database;
     
+    note temp =note(id: noteEx!.id,pin: noteEx.pin, isArchived: !noteEx.isArchived, title: noteEx.title, content: noteEx.content, createdTime: noteEx.createdTime);
+
     
     bool check=(noteEx!.isArchived);
 
     await db!.update(
         NotesImpnames.tableaName, {NotesImpnames.isArchived: check ? 0 : 1},
         where: '${NotesImpnames.id} = ?', whereArgs: [noteEx.id]);
+
+     return temp;   
 
   }
   Future<List<note>> pinedNotes() async {
