@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:noteapp/colors.dart';
 import 'package:noteapp/createnote.dart';
 import 'package:noteapp/noteview.dart';
@@ -115,7 +116,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: bgColor), // Replace with your desired color
+    );
+    return  isLoading
         ? const Scaffold(
             backgroundColor: bgColor,
             body: Center(child: CircularProgressIndicator(color: Colors.white)),
