@@ -104,6 +104,13 @@ class _HomeState extends State<Home> {
     pinUser = await noteDatabase.instance.pinedNotes();
   }
 
+  void getprofile(){
+    if (FirebaseAuth.instance.currentUser!.photoURL!=Null) {
+      String rt =FirebaseAuth.instance.currentUser!.photoURL.toString();
+      
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -255,10 +262,13 @@ class _HomeState extends State<Home> {
                                               color: white,
                                             )),
                                         const SizedBox(width: 10),
-                                        const CircleAvatar(
+                                         CircleAvatar(
                                           backgroundColor: white,
                                           radius:
                                               16, // size define of circular avatar image
+                                          child: ClipOval(
+                                            child: FirebaseAuth.instance.currentUser!.photoURL  ==null? const  Icon(Icons.person_2): Image.network(FirebaseAuth.instance.currentUser!.photoURL.toString()) ,
+                                          ),
                                         )
                                       ],
                                     ),
