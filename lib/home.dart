@@ -1,6 +1,7 @@
 import 'dart:ffi';
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:noteapp/colors.dart';
@@ -22,6 +23,8 @@ List<note> pinUser = [];
 List<note> listUser = [];
 
 bool isLoading = true;
+
+final user=FirebaseAuth.instance.currentUser!;
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -112,6 +115,7 @@ class _HomeState extends State<Home> {
     //     createdTime: DateTime.now()));
     getNotes();
     getpin();
+    print(user.email);
   }
 
   @override

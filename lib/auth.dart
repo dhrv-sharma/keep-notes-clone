@@ -11,7 +11,7 @@ class auth extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder<User ?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
+        stream: FirebaseAuth.instance.authStateChanges(), // contant listening wheather user logged in or not 
         builder: (context, snapshot)  {
           if(snapshot.hasData){
             return Home();
