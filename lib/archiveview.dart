@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:noteapp/colors.dart';
 import 'package:noteapp/createnote.dart';
@@ -239,11 +240,13 @@ class _archiveFolderState extends State<archiveFolder> {
                                               color: white,
                                             )),
                                         const SizedBox(width: 10),
-                                        const CircleAvatar(
+                                        CircleAvatar(
                                           backgroundColor: white,
                                           radius:
                                               16, // size define of circular avatar image
-                                        )
+                                          child: ClipOval(
+                                            child: FirebaseAuth.instance.currentUser!.photoURL  ==null? const  Icon(Icons.person_2): Image.network(FirebaseAuth.instance.currentUser!.photoURL.toString()) ,
+                                          )),
                                       ],
                                     ),
                                   )

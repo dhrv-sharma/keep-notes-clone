@@ -5,9 +5,11 @@ import 'dart:ffi';
 
 
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:noteapp/archiveview.dart';
+import 'package:noteapp/auth.dart';
 import 'package:noteapp/colors.dart';
 import 'package:noteapp/home.dart';
 import 'package:noteapp/settingview.dart';
@@ -57,6 +59,10 @@ class _side_DrawerState extends State<side_Drawer> {
                 height: 8,
               ),
               sectionsetting(),
+             const  SizedBox(
+                height: 8,
+              ),
+              sectionlogout(),
              const  SizedBox(
                 height: 8,
               ),
@@ -164,6 +170,38 @@ Widget sectionsetting() {
               ),
               Text(
                 "Settings ",
+                style: TextStyle(color: white.withOpacity(0.7), fontSize: 18),
+              )
+            ],
+          ),
+        )),
+  );
+}
+
+
+Widget sectionlogout() {
+  return Container(
+    margin: const EdgeInsets.only(right: 10),
+    child: TextButton(
+        onPressed: () {
+         FirebaseAuth.instance.signOut();
+         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>auth()));
+          
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+          child: Row(
+            children: [
+              Icon(
+                Icons.logout,
+                size: 27,
+                color: Colors.red[400],
+              ),
+              const SizedBox(
+                width: 27,
+              ),
+              Text(
+                "Logout",
                 style: TextStyle(color: white.withOpacity(0.7), fontSize: 18),
               )
             ],

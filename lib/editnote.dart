@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:noteapp/colors.dart';
 import 'package:noteapp/noteview.dart';
@@ -38,6 +39,7 @@ class _editNoteState extends State<editNote> {
               note newNote=note( pin : widget.Note!.pin,isArchived: widget.Note!.isArchived,title: newTitle, content: newNoteCont, createdTime: widget.Note!.createdTime,id: widget.Note!.id);
               await noteDatabase.instance.updateNote(newNote);
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>noteview(Note: newNote)));
+              await firestore.updateNoteFirestore(newNote.title, newNote.content, FirebaseAuth.instance.currentUser!.email, newNote.id.toString(),newNote.isArchived,newNote.pin);
 
             },
             icon: const Icon(Icons.save_outlined),

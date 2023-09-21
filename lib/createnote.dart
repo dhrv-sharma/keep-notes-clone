@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:noteapp/colors.dart';
 import 'package:noteapp/home.dart';
 import 'package:noteapp/model/mynote.dart';
 import 'package:noteapp/services/db.dart';
+import 'package:noteapp/services/firebase_service.dart';
+
+FireDB firestore = FireDB();
 
 class newNote extends StatefulWidget {
   const newNote({super.key});
@@ -22,6 +26,7 @@ class _newNoteState extends State<newNote> {
     contrlContent.dispose();
     contrlTitle.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,12 +37,20 @@ class _newNoteState extends State<newNote> {
         actions: [
           IconButton(
             onPressed: () async {
-              await noteDatabase.instance.InsertEntry(note(
+              note? noteEx = await noteDatabase.instance.InsertEntry(note(
                   pin: false,
                   isArchived: false,
                   title: contrlTitle.text,
                   content: contrlContent.text,
                   createdTime: DateTime.now()));
+
+              await firestore.createNoteFirestore(
+                  FirebaseAuth.instance.currentUser!.email,
+                  noteEx!.id.toString(),
+                  contrlTitle.text,
+                  contrlContent.text,
+                  noteEx.isArchived,
+                  noteEx.pin);
               Navigator.pop(context);
             },
             icon: const Icon(Icons.save_outlined),

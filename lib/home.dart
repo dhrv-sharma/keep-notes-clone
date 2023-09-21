@@ -9,6 +9,7 @@ import 'package:noteapp/createnote.dart';
 import 'package:noteapp/noteview.dart';
 import 'package:noteapp/searchpage.dart';
 import 'package:noteapp/services/db.dart';
+import 'package:noteapp/services/firebase_service.dart';
 import 'package:noteapp/services/services.dart';
 import 'package:noteapp/sidedrawer.dart';
 import 'model/mynote.dart';
@@ -77,6 +78,8 @@ class _HomeState extends State<Home> {
 
     return true;
   }
+
+  
 
   Future cretaeEntry(note noteEx) async {
     await noteDatabase.instance.InsertEntry(noteEx);

@@ -1,9 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:noteapp/colors.dart';
 import 'package:noteapp/editnote.dart';
 import 'package:noteapp/home.dart';
 import 'package:noteapp/model/mynote.dart';
 import 'package:noteapp/services/db.dart';
+import 'package:noteapp/services/firebase_service.dart';
+
+FireDB firestore=FireDB();
 
 late bool pinned;
 late bool archived;
@@ -50,6 +54,9 @@ class _noteviewState extends State<noteview> {
               view = temp;
               pinned = !pinned;
 
+              await firestore.updateNoteFirestore(view!.title, view!.content, FirebaseAuth.instance.currentUser!.email, view!.id.toString(),view!.isArchived,view!.pin);
+
+
               setState(() {});
             },
             icon: pinned
@@ -66,6 +73,9 @@ class _noteviewState extends State<noteview> {
               // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> noteview(Note: widget.)));
               view = temp;
               archived = !archived;
+
+              await firestore.updateNoteFirestore(view!.title, view!.content, FirebaseAuth.instance.currentUser!.email, view!.id.toString(),view!.isArchived,view!.pin);
+
 
               print("second ${view!.isArchived}");
 
@@ -90,6 +100,7 @@ class _noteviewState extends State<noteview> {
           IconButton(
             onPressed: () async {
               await noteDatabase.instance.deleteNote(view);
+              await firestore.deletedNoteFirestore(FirebaseAuth.instance.currentUser!.email, view!.id.toString());
               Navigator.pop(context);
             },
             icon: const Icon(Icons.delete_forever_outlined),
