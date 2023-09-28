@@ -82,7 +82,7 @@ class noteDatabase {
         '${NotesImpnames.createdTime} ASC'; // sorting the data from the table in ascending order of time
     final query_result = await db!.query(NotesImpnames.tableaName, where: '${NotesImpnames.pin} = 0 AND ${NotesImpnames.isArchived} = 0',
         orderBy: orderList); //Notes is the name of the database
-
+// .map iterates the list also .tolist() converts all object in list
     return query_result.map((json) => note.fromJson(json)).toList();
   }
 
